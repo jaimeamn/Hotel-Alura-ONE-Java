@@ -2,42 +2,64 @@ package modelo;
 
 import java.sql.Date;
 
-
 public class Reserva {
 	
 	private Integer id;
-	private Date fechaEntrada;
-	private Date fechaSalida;
+	private Date fechaE;
+	private Date fechaS;
 	private String valor;
+	private String formaPago;
 	
 	
-	public Reserva(Date fechaEntrada, Date fechaSalida, String valor, String formaPago) {
-		super();
-		this.fechaEntrada = fechaEntrada;
-		this.fechaSalida = fechaSalida;
+	public Reserva(Date fechaE, Date fechaS, String valor, String formaPago) {
+		super();		
+		this.fechaE = fechaE;
+		this.fechaS = fechaS;
 		this.valor = valor;
 		this.formaPago = formaPago;
 	}
-	
-	
+		
+	public Reserva(Integer id, Date fechaE, Date fechaS, String valor, String formaPago) {
+		this.id = id;
+		this.fechaE = fechaE;
+		this.fechaS = fechaS;
+		this.valor = valor;
+		this.formaPago = formaPago;
+	}
+
 	public Integer getId() {
 		return id;
 	}
+	
 	public void setId(Integer id) {
 		this.id = id;
 	}
-	public Date getFechaEntrada() {
-		return fechaEntrada;
+
+	public Date getfechaE() {
+		return fechaE;
 	}
-	public Date getFechaSalida() {
-		return fechaSalida;
+
+	public Date getfechaS() {
+		return fechaS;
 	}
-	public String getValor() {
+
+	public String getvalor() {
 		return valor;
 	}
-	public String getFormaPago() {
+
+	public String getformaPago() {
 		return formaPago;
 	}
-	private String formaPago;
 
+	
+//	@Override
+//	public String toString() {
+//		// TODO Auto-generated method stub
+//		return String.format("La reserva generada fue: %d, %s, %s, %s, %s", this.id, this.fechaE, this.fechaS, this.valor, this.formaPago);
+//	}
+//	
+	
+	
 }
+	
+	

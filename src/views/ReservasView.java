@@ -11,19 +11,29 @@ import javax.swing.ImageIcon;
 import java.awt.Color;
 import javax.swing.JTextField;
 import com.toedter.calendar.JDateChooser;
+import controller.ReservasController;
+import modelo.Reserva;
+
 import java.awt.Font;
 import javax.swing.JComboBox;
 import javax.swing.DefaultComboBoxModel;
 import java.text.Format;
+import java.util.Calendar;
+import javax.swing.JButton;
+import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionAdapter;
+import java.awt.event.ActionEvent;
 import java.awt.Toolkit;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeEvent;
 import javax.swing.JSeparator;
 import javax.swing.SwingConstants;
+import javax.swing.UIManager;
 import javax.swing.border.LineBorder;
+import javax.swing.border.BevelBorder;
+
 
 
 @SuppressWarnings("serial")
@@ -36,8 +46,9 @@ public class ReservasView extends JFrame {
 	public static JComboBox<Format> txtFormaPago;
 	int xMouse, yMouse;
 	private JLabel labelExit;
-	private JLabel lblValorSimbolo; 
+	private JLabel lblNewLabel_3; 
 	private JLabel labelAtras;
+	private ReservasController reservasController;
 
 	/**
 	 * Launch the application.
@@ -60,6 +71,8 @@ public class ReservasView extends JFrame {
 	 */
 	public ReservasView() {
 		super("Reserva");
+		this.reservasController = new ReservasController();
+
 		setIconImage(Toolkit.getDefaultToolkit().getImage(ReservasView.class.getResource("/imagenes/aH-40px.png")));
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 910, 560);
@@ -81,6 +94,7 @@ public class ReservasView extends JFrame {
 		panel.setBounds(0, 0, 910, 560);
 		contentPane.add(panel);
 		panel.setLayout(null);
+		
 		
 		JSeparator separator_1_2 = new JSeparator();
 		separator_1_2.setForeground(SystemColor.textHighlight);
@@ -112,13 +126,12 @@ public class ReservasView extends JFrame {
 		txtFechaE.setFont(new Font("Roboto", Font.PLAIN, 18));
 		panel.add(txtFechaE);
 		
-		lblValorSimbolo = new JLabel("$");
-		lblValorSimbolo.setVisible(false);
-		lblValorSimbolo.setBounds(121, 332, 17, 25);
-		lblValorSimbolo.setForeground(SystemColor.textHighlight);
-		lblValorSimbolo.setFont(new Font("Roboto", Font.BOLD, 17));
-		
-		panel.add(lblValorSimbolo);
+		lblNewLabel_3 = new JLabel("$");
+		lblNewLabel_3.setBounds(121, 332, 17, 25);
+		lblNewLabel_3.setForeground(SystemColor.textHighlight);
+		lblNewLabel_3.setFont(new Font("Roboto", Font.BOLD, 17));
+		lblNewLabel_3.setEnabled(false);
+		panel.add(lblNewLabel_3);
 		
 		JLabel lblCheckIn = new JLabel("FECHA DE CHECK IN");
 		lblCheckIn.setForeground(SystemColor.textInactiveText);
@@ -141,7 +154,7 @@ public class ReservasView extends JFrame {
 		txtFechaS.setFont(new Font("Roboto", Font.PLAIN, 18));
 		txtFechaS.addPropertyChangeListener(new PropertyChangeListener() {
 			public void propertyChange(PropertyChangeEvent evt) {
-//Activa el evento, después del usuario seleccionar las fechas se debe calcular el valor de la reserva
+				calcularValor(txtFechaE,txtFechaS);				
 			}
 		});
 		txtFechaS.setDateFormatString("yyyy-MM-dd");
@@ -194,16 +207,16 @@ public class ReservasView extends JFrame {
 		panel.add(panel_1);
 		panel_1.setLayout(null);
 		
-		JLabel logo = new JLabel("");
-		logo.setBounds(197, 68, 104, 107);
-		panel_1.add(logo);
-		logo.setIcon(new ImageIcon(ReservasView.class.getResource("/imagenes/Ha-100px.png")));
+		JLabel Logo = new JLabel("");
+		Logo.setBounds(197, 68, 104, 107);
+		panel_1.add(Logo);
+		Logo.setIcon(new ImageIcon(ReservasView.class.getResource("/imagenes/Ha-100px.png")));
 		
-		JLabel imagenFondo = new JLabel("");
-		imagenFondo.setBounds(0, 140, 500, 409);
-		panel_1.add(imagenFondo);
-		imagenFondo.setBackground(Color.WHITE);
-		imagenFondo.setIcon(new ImageIcon(ReservasView.class.getResource("/imagenes/reservas-img-3.png")));
+		JLabel ImagenFondo = new JLabel("");
+		ImagenFondo.setBounds(0, 140, 500, 409);
+		panel_1.add(ImagenFondo);
+		ImagenFondo.setBackground(Color.WHITE);
+		ImagenFondo.setIcon(new ImageIcon(ReservasView.class.getResource("/imagenes/reservas-img-3.png")));
 		
 		JPanel btnexit = new JPanel();
 		btnexit.addMouseListener(new MouseAdapter() {
@@ -296,8 +309,7 @@ public class ReservasView extends JFrame {
 			@Override
 			public void mouseClicked(MouseEvent e) {
 				if (ReservasView.txtFechaE.getDate() != null && ReservasView.txtFechaS.getDate() != null) {		
-					RegistroHuesped registro = new RegistroHuesped();
-					registro.setVisible(true);
+					guardarReserva();									
 				} else {
 					JOptionPane.showMessageDialog(null, "Debes llenar todos los campos.");
 				}
@@ -317,7 +329,41 @@ public class ReservasView extends JFrame {
 		btnsiguiente.add(lblSiguiente);
 	}
 
-	//Código que permite mover la ventana por la pantalla según la posición de "x" y "y"	
+	private void guardarReserva() {	
+		try {
+			String fechaE = ((JTextField)txtFechaE.getDateEditor().getUiComponent()).getText();
+			String fechaS = ((JTextField)txtFechaS.getDateEditor().getUiComponent()).getText();			
+			Reserva reserva = new Reserva(java.sql.Date.valueOf(fechaE), java.sql.Date.valueOf(fechaS), ReservasView.txtValor.getText(), ReservasView.txtFormaPago.getSelectedItem().toString());
+			reservasController.guardar(reserva);
+			
+			RegistroHuesped huesped = new RegistroHuesped(reserva.getId());
+			huesped.setVisible(true);
+			dispose();
+			
+		} catch (Exception ex) {
+			JOptionPane.showMessageDialog(contentPane, "Error: " + ex.getMessage(), "Erro", JOptionPane.ERROR_MESSAGE);
+		}
+	}
+	
+	private void calcularValor(JDateChooser fechaE,JDateChooser fechaS) {		
+		if(fechaE.getDate() != null && fechaS.getDate() !=null) {
+			Calendar inicio = fechaE.getCalendar();
+			Calendar fin = fechaS.getCalendar();
+			int dias = -1; // Usamos -1 para contar a partir del dia siguiente
+			int diaria = 180;
+			int valor;
+			
+			while(inicio.before(fin)||inicio.equals(fin)) {
+				dias++;
+				inicio.add(Calendar.DATE,1); //dias a ser aumentados
+			}
+			valor = dias * diaria;
+			txtValor.setText("" + valor);
+		}
+	}
+	
+	
+	
 	 private void headerMousePressed(java.awt.event.MouseEvent evt) {
 	        xMouse = evt.getX();
 	        yMouse = evt.getY();

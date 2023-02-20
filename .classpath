@@ -7,8 +7,11 @@
 		</attributes>
 	</classpathentry>
 	<classpathentry kind="lib" path="C:/Users/Jaime Martinez/Documents/Oracle curso/Challenges/Alura-Hotel-ONE/Hotel-Alura-ONE-Java/JARS/c3p0-0.9.5.4.jar"/>
-	<classpathentry kind="lib" path="C:/Users/Jaime Martinez/Documents/Oracle curso/Challenges/Alura-Hotel-ONE/Hotel-Alura-ONE-Java/JARS/jcalendar-1.4.jar"/>
 	<classpathentry kind="lib" path="C:/Users/Jaime Martinez/Documents/Oracle curso/Challenges/Alura-Hotel-ONE/Hotel-Alura-ONE-Java/JARS/mchange-commons-java-0.2.16.jar"/>
 	<classpathentry kind="lib" path="C:/Users/Jaime Martinez/Documents/Oracle curso/Challenges/Alura-Hotel-ONE/Hotel-Alura-ONE-Java/JARS/mysql-connector-java-8.0.17.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Jaime Martinez/Downloads/jcalendar/lib/jcalendar-1.4.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Jaime Martinez/Downloads/jcalendar/lib/jgoodies-common-1.2.0.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Jaime Martinez/Downloads/jcalendar/lib/jgoodies-looks-2.4.1.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Jaime Martinez/Downloads/jcalendar/lib/junit-4.6.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
